@@ -13,7 +13,15 @@ namespace WebMail.Server.Extensions
             if (context.AllMigrationsApplied())
             {
                 var seed = new SeedDbData(host, context);
+            }
         }
+
+        public static void Seed(this ApplicationDbContext context, IServiceScope serviceScope)
+        {
+            if (context.AllMigrationsApplied())
+            {
+                var seed = new SeedDbData(serviceScope, context);
+            }
         }
 
         public static bool AllMigrationsApplied(this ApplicationDbContext context)

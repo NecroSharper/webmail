@@ -81,7 +81,14 @@ namespace WebMail.Server.Extensions
             try
             {
                 var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-                serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+                var db = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                db.Database.Migrate();
+
+                if (db.AllMigrationsApplied())
+                {
+                    db.Seed(serviceScope);
+                }
+                    
             }
             catch (Exception) { }
             return app;

@@ -27,6 +27,16 @@ namespace WebMail.Server
             CreateUsers(); // Add users
         }
 
+        public SeedDbData(IServiceScope serviceScope, ApplicationDbContext context)
+        {
+            _hostingEnv = serviceScope.ServiceProvider.GetService<IWebHostEnvironment>();
+            _roleManager = serviceScope.ServiceProvider.GetService<RoleManager<ApplicationRole>>();
+            _userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+            _context = context;
+            CreateRoles(); // Add roles
+            CreateUsers(); // Add users
+        }
+
         private void CreateRoles()
         {
             var rolesToAdd = new List<ApplicationRole>(){
