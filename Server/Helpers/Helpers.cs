@@ -14,7 +14,7 @@ namespace WebMail.Server
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel
             .Information()
-            .WriteTo.RollingFile("logs/log-{Date}.txt", LogEventLevel.Information) // Uncomment if logging required on text file
+            .WriteTo.File("logs/log-{Date}.txt", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Information) // Uncomment if logging required on text file
             .WriteTo.Seq("http://localhost:5341/")
             .CreateLogger();
         }
