@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HubConnection } from '@aspnet/signalr-client';
+import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 
 @Component({
   selector: 'appc-chat',
@@ -8,7 +8,7 @@ import { HubConnection } from '@aspnet/signalr-client';
 })
 export class ChatComponent implements OnInit {
 
-  private _hubConnection: HubConnection;
+    private _hubConnection: HubConnection;
   public async: any;
   message = '';
   messages: string[] = [];
@@ -25,7 +25,10 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._hubConnection = new HubConnection('/chathub');
+    //this._hubConnection = new HubConnection('/chathub');
+      this._hubConnection = new HubConnectionBuilder()
+          .withUrl('/chathub')
+          .build();
 
     this._hubConnection.on('send', (data: any) => {
       const received = `Received: ${data}`;

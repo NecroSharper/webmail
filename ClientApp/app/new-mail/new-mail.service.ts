@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Mail } from '../core/models/mail';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DataService } from '../core/services/data.service';
 
 @Injectable()

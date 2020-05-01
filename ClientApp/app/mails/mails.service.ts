@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { DataService } from '../core/services/data.service';
 
 import { Mail } from '../core/models/mail';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class MailsService {

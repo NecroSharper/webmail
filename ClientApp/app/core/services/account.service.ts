@@ -4,7 +4,7 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 
 import { LoginModel } from '../models/login-model';
 import { UtilityService } from '../../core/services/utility.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AuthTokenModel } from '../models/auth-tokens-model';
 import { JwtHelper } from 'angular2-jwt';
 import { ProfileModel } from '../models/profile-model';

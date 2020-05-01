@@ -2,7 +2,7 @@
 import { DataService } from '../core/services/data.service';
 
 import { MailServerModel } from "../core/models/mail-server-model";
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class MailAccountsService {

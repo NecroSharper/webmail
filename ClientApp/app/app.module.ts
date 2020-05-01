@@ -30,7 +30,7 @@ import { MailViewModule } from './mail-view/mail-view.module';
         NewMailModule,
         LoggedUserModule,
         MailViewModule,
-        NgbModule.forRoot()
+        NgbModule
     ],
     providers: [
         AppService
