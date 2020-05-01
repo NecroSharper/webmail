@@ -9,8 +9,8 @@ using WebMail.Server;
 namespace WebMail.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200501074134_Update migrations")]
-    partial class Updatemigrations
+    [Migration("20200501081343_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebMail.Migrations
 {
@@ -12,12 +11,12 @@ namespace WebMail.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true)
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,26 +27,26 @@ namespace WebMail.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    FirstName = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
-                    IsEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
-                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true)
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    IsEnabled = table.Column<bool>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 250, nullable: true),
+                    LastName = table.Column<string>(maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,9 +57,9 @@ namespace WebMail.Migrations
                 name: "Content",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Key = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false)
+                    Key = table.Column<string>(maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,13 +67,33 @@ namespace WebMail.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Drafts",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UniqueID = table.Column<uint>(nullable: false),
+                    Sender = table.Column<string>(nullable: true),
+                    Receiver = table.Column<string>(nullable: true),
+                    AttachmentName = table.Column<string>(nullable: true),
+                    Attachment = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Body = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTimeOffset>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Drafts", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Languages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    Locale = table.Column<string>(type: "TEXT", maxLength: 7, nullable: false)
+                    Locale = table.Column<string>(maxLength: 7, nullable: false),
+                    Description = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -82,16 +101,40 @@ namespace WebMail.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Mails",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UniqueID = table.Column<uint>(nullable: false),
+                    Sender = table.Column<string>(nullable: true),
+                    Receiver = table.Column<string>(nullable: true),
+                    AttachmentName = table.Column<string>(nullable: true),
+                    Attachment = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Body = table.Column<string>(nullable: true),
+                    Date = table.Column<DateTimeOffset>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mails", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictApplications",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    ClientId = table.Column<string>(type: "TEXT", nullable: true),
-                    ClientSecret = table.Column<string>(type: "TEXT", nullable: true),
-                    DisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    LogoutRedirectUri = table.Column<string>(type: "TEXT", nullable: true),
-                    RedirectUri = table.Column<string>(type: "TEXT", nullable: true),
-                    Type = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    ClientId = table.Column<string>(maxLength: 100, nullable: false),
+                    ClientSecret = table.Column<string>(nullable: true),
+                    ConcurrencyToken = table.Column<string>(maxLength: 50, nullable: true),
+                    ConsentType = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: true),
+                    Permissions = table.Column<string>(nullable: true),
+                    PostLogoutRedirectUris = table.Column<string>(nullable: true),
+                    Properties = table.Column<string>(nullable: true),
+                    RedirectUris = table.Column<string>(nullable: true),
+                    Type = table.Column<string>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,8 +145,13 @@ namespace WebMail.Migrations
                 name: "OpenIddictScopes",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    ConcurrencyToken = table.Column<string>(maxLength: 50, nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
+                    Properties = table.Column<string>(nullable: true),
+                    Resources = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -114,11 +162,11 @@ namespace WebMail.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    RoleId = table.Column<int>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,11 +183,11 @@ namespace WebMail.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -156,10 +204,10 @@ namespace WebMail.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,8 +224,8 @@ namespace WebMail.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -200,10 +248,10 @@ namespace WebMail.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                    UserId = table.Column<int>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -217,14 +265,37 @@ namespace WebMail.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MailAccounts",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    MailAddress = table.Column<string>(nullable: true),
+                    ImapServerAddress = table.Column<string>(nullable: true),
+                    SmtpServerAddress = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
+                    UserID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MailAccounts", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_MailAccounts_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ContentText",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ContentId = table.Column<int>(type: "INTEGER", nullable: false),
-                    LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Text = table.Column<string>(type: "TEXT", maxLength: 2048, nullable: false)
+                    Text = table.Column<string>(maxLength: 2048, nullable: false),
+                    ContentId = table.Column<int>(nullable: false),
+                    LanguageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -247,11 +318,14 @@ namespace WebMail.Migrations
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    ApplicationId = table.Column<string>(type: "TEXT", nullable: true),
-                    Scope = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<string>(type: "TEXT", nullable: true),
-                    Subject = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    ApplicationId = table.Column<string>(nullable: true),
+                    ConcurrencyToken = table.Column<string>(maxLength: 50, nullable: true),
+                    Properties = table.Column<string>(nullable: true),
+                    Scopes = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(maxLength: 25, nullable: false),
+                    Subject = table.Column<string>(maxLength: 450, nullable: false),
+                    Type = table.Column<string>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -268,16 +342,18 @@ namespace WebMail.Migrations
                 name: "OpenIddictTokens",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    ApplicationId = table.Column<string>(type: "TEXT", nullable: true),
-                    AuthorizationId = table.Column<string>(type: "TEXT", nullable: true),
-                    Ciphertext = table.Column<string>(type: "TEXT", nullable: true),
-                    CreationDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    ExpirationDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Hash = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<string>(type: "TEXT", nullable: true),
-                    Subject = table.Column<string>(type: "TEXT", nullable: true),
-                    Type = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    ApplicationId = table.Column<string>(nullable: true),
+                    AuthorizationId = table.Column<string>(nullable: true),
+                    ConcurrencyToken = table.Column<string>(maxLength: 50, nullable: true),
+                    CreationDate = table.Column<DateTimeOffset>(nullable: true),
+                    ExpirationDate = table.Column<DateTimeOffset>(nullable: true),
+                    Payload = table.Column<string>(nullable: true),
+                    Properties = table.Column<string>(nullable: true),
+                    ReferenceId = table.Column<string>(maxLength: 100, nullable: true),
+                    Status = table.Column<string>(maxLength: 25, nullable: false),
+                    Subject = table.Column<string>(maxLength: 450, nullable: false),
+                    Type = table.Column<string>(maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -344,20 +420,26 @@ namespace WebMail.Migrations
                 column: "LanguageId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MailAccounts_UserID",
+                table: "MailAccounts",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OpenIddictAuthorizations_ApplicationId",
+                name: "IX_OpenIddictAuthorizations_ApplicationId_Status_Subject_Type",
                 table: "OpenIddictAuthorizations",
-                column: "ApplicationId");
+                columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OpenIddictTokens_ApplicationId",
-                table: "OpenIddictTokens",
-                column: "ApplicationId");
+                name: "IX_OpenIddictScopes_Name",
+                table: "OpenIddictScopes",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictTokens_AuthorizationId",
@@ -365,10 +447,15 @@ namespace WebMail.Migrations
                 column: "AuthorizationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OpenIddictTokens_Hash",
+                name: "IX_OpenIddictTokens_ReferenceId",
                 table: "OpenIddictTokens",
-                column: "Hash",
+                column: "ReferenceId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OpenIddictTokens_ApplicationId_Status_Subject_Type",
+                table: "OpenIddictTokens",
+                columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -392,6 +479,15 @@ namespace WebMail.Migrations
                 name: "ContentText");
 
             migrationBuilder.DropTable(
+                name: "Drafts");
+
+            migrationBuilder.DropTable(
+                name: "MailAccounts");
+
+            migrationBuilder.DropTable(
+                name: "Mails");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
 
             migrationBuilder.DropTable(
@@ -401,13 +497,13 @@ namespace WebMail.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Content");
 
             migrationBuilder.DropTable(
                 name: "Languages");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");
