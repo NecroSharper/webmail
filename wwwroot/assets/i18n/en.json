@@ -60,9 +60,9 @@
   "Confirm_delete_mailbox": "Are you sure want to delete this mailbox: {{mailbox}}",
   "Empty": "Empty...",
   "Validation": {
-    "Requied": "is regquied",
-    "Email": "is not a correct email adress",
-    "ServerAddress": "is not a correct adres of mail server"
+    "Requied": "is required",
+    "Email": "is not a correct email address",
+    "ServerAddress": "is not a correct address of mail server"
   },
   "Drafts": "Draft mails"
 }
