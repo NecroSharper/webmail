@@ -80,7 +80,7 @@ namespace WebMail.Server.Controllers.api
                             var bodyPart = (TextPart)imapClient.Inbox.GetBodyPart(summary.UniqueId, textBody);
                             bodyText = bodyPart.Text;
                         }
-                        catch(Exception ex)
+                        catch(Exception)
                         {
                             bodyText = "";
                         }
@@ -111,7 +111,7 @@ namespace WebMail.Server.Controllers.api
 
                 imapClient.Disconnect(true);
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return null;
                 //return _dbContext.Mails; // return "hello world" mails from DB
@@ -199,7 +199,7 @@ namespace WebMail.Server.Controllers.api
                     return _dbContext.Drafts.Where(d => d.Sender == userMailAccount.MailAddress && d.ID == messageID).ToHashSet();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
                 //return _dbContext.Mails; // return "hello world" mails from DB

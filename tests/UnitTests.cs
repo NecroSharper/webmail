@@ -100,7 +100,7 @@ namespace WebMailTests
             var userManager = TestUserManager<ApplicationUser>();
             // userManager.GetUserId() = 1;
 
-            var env = new Mock<IHostingEnvironment>();
+            var env = new Mock<IWebHostEnvironment>();
 
             var sendMailModel = new SendMailModel();
 
@@ -129,7 +129,7 @@ namespace WebMailTests
             var userManager = TestUserManager<ApplicationUser>();
 
             // Startup.Configuration["Data:PasswordEncryptionKey"]
-            var env = new Mock<IHostingEnvironment>();
+            var env = new Mock<IWebHostEnvironment>();
             var configuration = new Mock<IConfiguration>();
             // configuration.Setup.configuration;
             // configuration.SetupProperty.configuration = "Data:PasswordEncryptionKey";

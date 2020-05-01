@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using WebMail.Server;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore;
+using Microsoft.Extensions.Logging;
 
 namespace WebMail
 {
@@ -10,23 +11,27 @@ namespace WebMail
     {
         public static void Main(string[] args)
         {
-            var host = BuildWebHost(args);
+            CreateHostBuilder(args)
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                })
+                .Build()
+                .Run();
 
             // http://odetocode.com/blogs/scott/archive/2016/09/20/database-migrations-and-seeding-in-asp-net-core.aspx
-            ProcessDbCommands.Process(args, host);
+            //ProcessDbCommands.Process(args, host);
 
-            host.Run();
-
+            //host.Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-          WebHost.CreateDefaultBuilder(args)
-              .UseConfiguration(new ConfigurationBuilder()
-                  .SetBasePath(Directory.GetCurrentDirectory())
-                  .AddJsonFile("hosting.json", optional: true)
-                  .Build()
-              )
-              .UseStartup<Startup>()
-              .Build();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

@@ -7,15 +7,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using AspNet.Security.OAuth.Validation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Hosting;
 
 namespace WebMail.Server.Controllers
 {
+    //[Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
-        public HomeController(UserManager<ApplicationUser> userManager, IHostingEnvironment env)
+        public HomeController(UserManager<ApplicationUser> userManager, IWebHostEnvironment env)
         {
             _userManager = userManager;
             _env = env;

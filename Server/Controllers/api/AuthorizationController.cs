@@ -34,15 +34,15 @@ namespace WebMail.Server.Controllers.api
 
         [HttpPost("~/connect/token"),
         Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
+        public async Task<IActionResult> Exchange(OpenIdConnectRequest _request)
         {
-            Debug.Assert(request.IsTokenRequest(),
+            Debug.Assert(_request.IsTokenRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
-            if (request.IsPasswordGrantType())
+            if (_request.IsPasswordGrantType())
             {
-                var user = await _userManager.FindByNameAsync(request.Username);
+                var user = await _userManager.FindByNameAsync(_request.Username);
                 if (user == null)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -53,7 +53,7 @@ namespace WebMail.Server.Controllers.api
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
-                var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+                var result = await _signInManager.CheckPasswordSignInAsync(user, _request.Password, lockoutOnFailure: true);
                 if (!result.Succeeded)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -64,12 +64,12 @@ namespace WebMail.Server.Controllers.api
                 }
 
                 // Create a new authentication ticket.
-                var ticket = await AppUtils.CreateTicketAsync(_signInManager, _identityOptions, request, user);
+                var ticket = await AppUtils.CreateTicketAsync(_signInManager, _identityOptions, _request, user);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            else if (request.IsRefreshTokenGrantType())
+            else if (_request.IsRefreshTokenGrantType())
             {
                 // Retrieve the claims principal stored in the refresh token.
                 var info = await HttpContext.AuthenticateAsync(OpenIdConnectServerDefaults.AuthenticationScheme);
@@ -100,7 +100,7 @@ namespace WebMail.Server.Controllers.api
 
                 // Create a new authentication ticket, but reuse the properties stored
                 // in the refresh token, including the scopes originally granted.
-                var ticket = await AppUtils.CreateTicketAsync(_signInManager, _identityOptions, request, user, info.Properties);
+                var ticket = await AppUtils.CreateTicketAsync(_signInManager, _identityOptions, _request, user, info.Properties);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }

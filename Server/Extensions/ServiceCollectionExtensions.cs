@@ -9,18 +9,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using AspNet.Security.OpenIdConnect.Primitives;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Core;
-using OpenIddict.Models;
+using OpenIddict.Server;
+using OpenIddict.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Net;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace WebMail.Server.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSslCertificate(this IServiceCollection services, IHostingEnvironment hostingEnv)
+        public static IServiceCollection AddSslCertificate(this IServiceCollection services, IWebHostEnvironment hostingEnv)
         {
             // var cert = new X509Certificate2(Path.Combine(hostingEnv.ContentRootPath, "extra", "cert.pfx"), "game123");
 
@@ -36,11 +39,15 @@ namespace WebMail.Server.Extensions
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ModelValidationFilter));
-            })
-            .AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
             });
+            //.AddJsonOptions(options =>
+            //{
+                //options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            //});
 
             return services;
         }
@@ -73,28 +80,37 @@ namespace WebMail.Server.Extensions
             services.AddOpenIddict(options =>
             {
                 // Register the Entity Framework stores.
-                options.AddEntityFrameworkCoreStores<ApplicationDbContext>();
+                options.AddCore(options =>
+                 {
+                     // Register the Entity Framework stores and models.
+                     options.UseEntityFrameworkCore()
+                            .UseDbContext<ApplicationDbContext>();
+                 })
 
-                // Register the ASP.NET Core MVC binder used by OpenIddict.
-                // Note: if you don't call this method, you won't be able to
-                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                options.AddMvcBinders();
+                // Register the OpenIddict server handler.
+                .AddServer(options =>
+                {
+                    options.UseMvc();
 
-                // Enable the token endpoint.
-                options.EnableTokenEndpoint("/connect/token");
+                    // Enable the token endpoint.
+                    options.EnableTokenEndpoint("/connect/token");
 
-                // Enable the password and the refresh token flows.
-                options.AllowPasswordFlow()
-                       .AllowRefreshTokenFlow();
+                    // Enable the password flow.
+                    options.AllowPasswordFlow()
+                        .AllowRefreshTokenFlow();
 
-                // During development, you can disable the HTTPS requirement.
-                options.DisableHttpsRequirement();
+                    // Accept anonymous clients (i.e clients that don't send a client_id).
+                    options.AcceptAnonymousClients();
 
-                // Note: to use JWT access tokens instead of the default
-                // encrypted format, the following lines are required:
-                //
-                // options.UseJsonWebTokens();
-                // options.AddEphemeralSigningKey();
+                    // During development, you can disable the HTTPS requirement.
+                    options.DisableHttpsRequirement();
+
+                    // Note: to use JWT access tokens instead of the default
+                    // encrypted format, the following lines are required:
+                    //
+                    // options.UseJsonWebTokens();
+                    // options.AddEphemeralSigningKey();
+                });
             });
 
             // If you prefer using JWT, don't forget to disable the automatic
@@ -184,7 +200,7 @@ namespace WebMail.Server.Extensions
         public static IServiceCollection AddCustomDbContext(this IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContextPool<ApplicationDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
             {
                 string useSqLite = Startup.Configuration["Data:useSqLite"];
                 if (useSqLite.ToLower() == "true")

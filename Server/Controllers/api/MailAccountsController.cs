@@ -140,7 +140,7 @@ namespace WebMail.Server.Controllers.api
             };
             _dbcontext.MailAccounts.Add(mailAccount);
             user.MailAccounts.Add(mailAccount);
-            _dbcontext.SaveChanges();
+            await _dbcontext.SaveChangesAsync();
 
             return CreatedAtAction("PostMailAccount", new { id = mailAccount.ID }, mailAccount);
         }

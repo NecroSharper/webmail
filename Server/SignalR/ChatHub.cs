@@ -8,7 +8,7 @@ namespace WebMail.Server.SignalR
     {
         public Task Send(string message)
         {
-            return Clients.All.InvokeAsync("Send", message);
+            return Clients.All.SendAsync("Send", message);
         }
     }
 }

@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Threading.Tasks;
 using System.Net;
 using WebMail.Server.SignalR;
+using Microsoft.Extensions.Hosting;
 
 namespace WebMail
 {
@@ -18,8 +19,8 @@ namespace WebMail
         //2) Configure services
         //3) Configure
 
-        private IHostingEnvironment _hostingEnv;
-        public Startup2(IConfiguration configuration, IHostingEnvironment env)
+        private IWebHostEnvironment _hostingEnv;
+        public Startup2(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             _hostingEnv = env;
@@ -72,7 +73,7 @@ namespace WebMail
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "WebMail", Version = "v1" });
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "WebMail", Version = "v1" });
             });
         }
         public void Configure(IApplicationBuilder app)
@@ -91,12 +92,6 @@ namespace WebMail
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<Chat>("chathub");
-            });
-
         }
     }
 }

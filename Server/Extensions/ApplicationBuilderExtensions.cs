@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
@@ -57,13 +58,11 @@ namespace WebMail.Server.Extensions
         }
         public static IApplicationBuilder AddDevMiddlewares(this IApplicationBuilder app)
         {
-            var env = app.ApplicationServices.GetRequiredService<IHostingEnvironment>();
+            var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
             var loggerFactory = app.ApplicationServices.GetRequiredService<ILoggerFactory>();
 
             if (env.IsDevelopment())
             {
-                loggerFactory.AddConsole(Startup.Configuration.GetSection("Logging"));
-                loggerFactory.AddDebug();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseCustomWebpackDevMiddleware();

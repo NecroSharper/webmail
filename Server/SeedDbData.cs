@@ -11,7 +11,7 @@ namespace WebMail.Server
     public class SeedDbData
     {
         readonly ApplicationDbContext _context;
-        private readonly IHostingEnvironment _hostingEnv;
+        private readonly IWebHostEnvironment _hostingEnv;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
 
@@ -19,7 +19,7 @@ namespace WebMail.Server
         {
             var services = (IServiceScopeFactory)host.Services.GetService(typeof(IServiceScopeFactory));
             var serviceScope = services.CreateScope();
-            _hostingEnv = serviceScope.ServiceProvider.GetService<IHostingEnvironment>();
+            _hostingEnv = serviceScope.ServiceProvider.GetService<IWebHostEnvironment>();
             _roleManager = serviceScope.ServiceProvider.GetService<RoleManager<ApplicationRole>>();
             _userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
             _context = context;

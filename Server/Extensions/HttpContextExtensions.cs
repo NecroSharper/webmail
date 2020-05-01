@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WebMail.Server.Extensions
 {
-        public static class HttpContextExtensions
+    public static class HttpContextExtensions
     {
-        public static IEnumerable<AuthenticationDescription> GetExternalProviders(this HttpContext context)
+        /*public static IEnumerable<AuthenticationDescription> GetExternalProviders(this HttpContext context)
         {
             if (context == null)
             {
@@ -30,6 +30,6 @@ namespace WebMail.Server.Extensions
             return (from description in context.GetExternalProviders()
                     where string.Equals(description.AuthenticationScheme, provider, StringComparison.OrdinalIgnoreCase)
                     select description).Any();
-        }
+        }//*/
     }
 }

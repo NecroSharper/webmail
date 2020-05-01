@@ -8,13 +8,13 @@
 
 <div>
     <!-- <cache expires-after="@TimeSpan.FromMinutes(10)"> -->
-        <!-- <appc-root asp-prerender-module="ClientApp/dist/main-server">  -->
-        <appc-root>
-         <!-- <appc-root >  -->
-            <div class="app-spinner">
-                <i class="fa fa-circle-o-notch fa-spin fa-5x" aria-hidden="true"></i>
-            </div>
-         </appc-root>
+    <!-- <appc-root asp-prerender-module="ClientApp/dist/main-server">  -->
+    <appc-root>
+        <!-- <appc-root >  -->
+        <div class="app-spinner">
+            <i class="fa fa-circle-o-notch fa-spin fa-5x" aria-hidden="true"></i>
+        </div>
+    </appc-root>
     <!-- </cache> -->
 </div>
 
@@ -26,5 +26,6 @@
 @section scripts {
     <script src="~/dist/main-client.js" asp-append-version="true"></script>
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reflect-metadata/0.1.13/Reflect.min.js" integrity="sha256-yYaPYfHkZW+7T9i05QA1EP+AX2otcg2PqDFndxktiBI=" crossorigin="anonymous"></script>
 
 @*<script src="~/dist/@ViewBag.MainDotJs" asp-append-version="true"></script>*@

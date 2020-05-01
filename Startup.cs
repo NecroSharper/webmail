@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Threading.Tasks;
 using System.Net;
 using WebMail.Server.SignalR;
+using Microsoft.Extensions.Hosting;
 
 namespace WebMail
 {
@@ -18,8 +19,8 @@ namespace WebMail
         //2) Configure services
         //3) Configure
 
-        private IHostingEnvironment _hostingEnv;
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        private IWebHostEnvironment _hostingEnv;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             _hostingEnv = env;
@@ -77,7 +78,7 @@ namespace WebMail
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "WebMail", Version = "v1" });
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "WebMail", Version = "v1" });
             });
         }
         public void Configure(IApplicationBuilder app)
@@ -95,21 +96,25 @@ namespace WebMail
 
             app.UseStaticFiles();
 
+            app.UseRouting();
+
             app.UseAuthentication();
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<Chat>("chathub");
-            });
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
                 // http://stackoverflow.com/questions/25982095/using-googleoauth2authenticationoptions-got-a-redirect-uri-mismatch-error
-                routes.MapRoute(name: "signin-google", template: "signin-google", defaults: new { controller = "Account", action = "ExternalLoginCallback" });
+                endpoints.MapControllerRoute(
+                    name: "signin-google",
+                    //template: "signin-google", 
+                    pattern: "{controller=Account}/{action=ExternalLoginCallback}");
 
-                routes.MapSpaFallbackRoute(
+                endpoints.MapControllerRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                    pattern: "{controller=Home}/{action=Index}");
+
+                endpoints.MapHub<Chat>("/chathub");
             });
         }
     }
