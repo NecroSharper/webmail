@@ -13,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace WebMail.Server.Controllers
 {
-    //[Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
     [AllowAnonymous]
     public class HomeController : Controller
     {

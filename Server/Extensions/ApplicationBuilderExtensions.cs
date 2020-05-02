@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Twitter;
+using OpenIddict.Core;
+using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Abstractions;
 
 namespace WebMail.Server.Extensions
 {
@@ -88,7 +91,34 @@ namespace WebMail.Server.Extensions
                 {
                     db.Seed(serviceScope);
                 }
-                    
+
+                var manager = serviceScope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
+
+                if (manager.FindByClientIdAsync("mvc").GetAwaiter().GetResult() == null)
+                {
+                    var descriptor = new OpenIddictApplicationDescriptor
+                    {
+                        ClientId = "spa",
+                        ClientSecret = "3C9D9371-3FB6-4352-B597-CEE7AC2D414A",
+                        DisplayName = "SPA client application",
+                        //PostLogoutRedirectUris = { new Uri("http://localhost:53507/signout-callback-oidc") },
+                        //RedirectUris = { new Uri("http://localhost:53507/signin-oidc") },
+                        Permissions =
+                        {
+                            OpenIddictConstants.Permissions.Endpoints.Authorization,
+                            OpenIddictConstants.Permissions.Endpoints.Logout,
+                            OpenIddictConstants.Permissions.Endpoints.Token,
+                            OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+                            OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
+                            OpenIddictConstants.Permissions.GrantTypes.Password,
+                            OpenIddictConstants.Permissions.Scopes.Email,
+                            OpenIddictConstants.Permissions.Scopes.Profile,
+                            OpenIddictConstants.Permissions.Scopes.Roles
+                        }
+                    };
+
+                    manager.CreateAsync(descriptor).GetAwaiter().GetResult();
+                }
             }
             catch (Exception) { }
             return app;

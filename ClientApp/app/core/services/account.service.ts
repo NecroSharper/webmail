@@ -36,8 +36,10 @@ export class AccountService {
         const options = { headers };
         Object.assign(user, {
             grant_type: 'password',
+            client_id: 'spa',
+            client_secret: '3C9D9371-3FB6-4352-B597-CEE7AC2D414A',
             // offline_access is required for a refresh token
-            scope: ['openid offline_access client_id profile email roles']
+            scope: ['openid offline_access profile email roles']
         });
 
         return this.http.post('/connect/token', this.encodeObjectToParams(user), options)

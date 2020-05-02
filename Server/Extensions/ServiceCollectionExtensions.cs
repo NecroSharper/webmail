@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using OpenIddict.Abstractions;
 
 namespace WebMail.Server.Extensions
 {
@@ -43,11 +44,11 @@ namespace WebMail.Server.Extensions
                                  .RequireAuthenticatedUser()
                                  .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            //.AddJsonOptions(options =>
-            //{
-                //options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            //});
 
             return services;
         }
@@ -104,6 +105,11 @@ namespace WebMail.Server.Extensions
 
                     // During development, you can disable the HTTPS requirement.
                     options.DisableHttpsRequirement();
+
+                    // Mark the "email", "profile" and "roles" scopes as supported scopes.
+                    options.RegisterScopes(OpenIdConnectConstants.Scopes.Email,
+                                           OpenIdConnectConstants.Scopes.Profile,
+                                           OpenIddictConstants.Scopes.Roles);
 
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
