@@ -60,9 +60,15 @@ namespace WebMail.Server.Controllers.api
             try
             {
                 ImapClient imapClient = new ImapClient();
-                //imapClient.Connect("imap.gmail.com", 993, SecureSocketOptions.SslOnConnect);
-                imapClient.Connect(userMailAccount.ImapServerAddress, 993, SecureSocketOptions.SslOnConnect);
-                //imapClient.Authenticate("webmail2017.dev", "12341234xx");
+                try
+                {
+                    imapClient.Connect(userMailAccount.ImapServerAddress, 993, SecureSocketOptions.SslOnConnect);
+                }
+                catch (Exception)
+                {
+                    //without SSL
+                    imapClient.Connect(userMailAccount.ImapServerAddress, 143, SecureSocketOptions.None);
+                }
                 imapClient.Authenticate(userMailAccount.MailAddress, decryptPassword(userMailAccount.Password));
                 imapClient.Inbox.Open(FolderAccess.ReadOnly);
 
